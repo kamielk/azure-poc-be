@@ -9,6 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200");
+        });
+});
+
 builder.Services.AddDbContext<AzurePocContext>();
 
 builder.Services.AddSingleton(serviceProvider =>
@@ -50,7 +60,7 @@ app.MapGet("/pokemon/images/{*name}", async (string name, BlobContainerClient bl
     if (!await client.ExistsAsync())
     {
         context.Response.StatusCode = 404;
-        return;        
+        return;
     }
 
     try
@@ -69,4 +79,5 @@ app.MapGet("/pokemon/images/{*name}", async (string name, BlobContainerClient bl
 })
 .WithName("GetPokemonImage");
 
+app.UseCors();
 app.Run();
