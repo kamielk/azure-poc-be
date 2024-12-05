@@ -15,7 +15,8 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200");
+            var origins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
+            policy.WithOrigins(origins);
         });
 });
 

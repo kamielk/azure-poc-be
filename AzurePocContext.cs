@@ -16,7 +16,8 @@ public partial class AzurePocContext : DbContext
     public virtual DbSet<Pokemon> Pokemon { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("name=AzurePOC");
+        => optionsBuilder
+        .UseSqlServer("name=AzurePOC");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
