@@ -10,13 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 
+var corsOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy =>
         {
-            var origins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
-            policy.WithOrigins(origins);
+            policy.WithOrigins(corsOrigins);
         });
 });
 
@@ -80,5 +80,6 @@ app.MapGet("/pokemon/images/{*name}", async (string name, BlobContainerClient bl
 })
 .WithName("GetPokemonImage");
 
+app.Logger.LogInformation("Using cors origins: [{Origins}]", string.Join(", ", corsOrigins));
 app.UseCors();
 app.Run();
